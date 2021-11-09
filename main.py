@@ -1,5 +1,7 @@
 import json
+from random import shuffle
 from scraper.reddit_scraper import Scraper
+from nltk.sentiment import SentimentIntensityAnalyzer
 
 cred_file = "creds.json"
 submission_id = "qpp1nj"
@@ -13,8 +15,15 @@ def main():
     scraper = Scraper(creds, submission_id)
     scraper.connect()
 
-    #Get the comments to analyze
+    #Get the top level comments to analyze
     comments = scraper.get_comments()
+
+    #Analysis time!
+    sia = SentimentIntensityAnalyzer()
+
+    shuffle(comments)
+    for c in comments[:10]:
+        print(sia.polarity_scores(c)["compound"], ": ", c)
 
 if __name__ == '__main__':
     main()

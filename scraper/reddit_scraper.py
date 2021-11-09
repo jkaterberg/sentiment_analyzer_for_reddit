@@ -14,6 +14,5 @@ class Scraper:
 
     def get_comments(self) -> list:
         self.__submission = self.__reddit.submission(id=self.__submission_id)
-        return [c.body \
-                for c in self.__submission.comments \
-                if not isinstance(c, MoreComments)]
+        self.__submission.comments.replace_more(limit=None)
+        return [c.body for c in self.__submission.comments.list()]
