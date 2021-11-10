@@ -3,8 +3,7 @@ import praw
 from praw.models import MoreComments
 
 class Scraper:
-    def __init__(self, creds: dict, submission_id: str):
-        self.__submission_id = submission_id
+    def __init__(self, creds: dict):
         self.__creds = creds
 
     def connect(self):
@@ -12,7 +11,11 @@ class Scraper:
                              client_secret=self.__creds['client_secret'],
                              user_agent=self.__creds['user_agent'])
 
-    def get_comments(self) -> list:
-        self.__submission = self.__reddit.submission(id=self.__submission_id)
-        self.__submission.comments.replace_more(limit=None)
-        return [c.body for c in self.__submission.comments.list()]
+    def get_comments(self, submission_id, replace_limit=0) -> list:
+        '''
+        Retrieves comments for specified post, returns them flat. Allows limiting number of comments retrieved for the sake of saving time
+
+        '''
+        self.__submission = self.__reddit.submission(id=submission_id)
+        self.__submission.comments.replace_more(limit=replace_limit)
+        return self.__submission.comments.list()
