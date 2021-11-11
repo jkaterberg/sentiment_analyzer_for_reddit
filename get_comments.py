@@ -6,9 +6,14 @@ import json
 import sys
 import re
 
-start = time.time()
-cred_file = "creds.json"
-submission_id = ["q095nt" if len(sys.argv) < 2 else sys.argv[1]][0]
+#check commandline arguments
+if(len(sys.argv) >= 2):
+    start = time.time()
+    cred_file = "creds.json"
+    submission_id = sys.argv[1]
+else:
+    quit();
+
 
 # Load credentials
 print("Loading credentials from file...")
@@ -42,13 +47,12 @@ for comment in [w for w in comments['comments'] if w.author is not None]:
 
 # Generate filename in the format id_datetime.json
 print("Writing to file...")
-filename =  "./data/" + \
-            comments['submission_id'] + "_" + \
-            re.sub('[-:. ]', '', str(comments['time'])) + \
-            ".json"
+filename =  "./data/" + comments['submission_id'] + ".json"
 
 f = open(filename, 'w')
 f.write(json.dumps(comment_json))
 f.close()
 
-print("Success(?)")
+end = time.time()
+
+print("Success(?) in %.2f seconds"%(end - start))
